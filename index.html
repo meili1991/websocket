@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #input-message {
+        height: 50px;
+        width: 300px;
+        margin-bottom: 20px;
+      }
+      #send-btn {
+        width: 100px;
+        line-height: 50px;
+        text-align: center;
+      }
+      #message-box {
+        width: 300px;
+        height: 200px;
+        border: 1px solid #000000;
+        margin-bottom: 20px;
+      }
+      #link-to-server {
+        width: 100px;
+        line-height: 50px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="input-message" /> <button id="send-btn">发送</button>
+    <div id="message-box"></div>
+    <button id="link-to-server">连接服务器</button>
+  </body>
+  <script>
+    let input = document.getElementById("input-message");
+    let messageBox = document.getElementById("message-box");
+    let sendBtn = document.getElementById("send-btn");
+    let linkBtn = document.getElementById("link-to-server");
+    let ws;
+    linkBtn.addEventListener("click", function() {
+      this.innerHTML = "连接中...";
+      ws = new WebSocket("ws://127.0.0.1:3000/mei/123");
+      let that = this;
+      ws.addEventListener("open", function(event) {
+        that.disabled = true;
+        that.innerHTML = "连接成功";
+      });
+      ws.addEventListener("message", function(event) {
+        let message = event.data;
+        messageBox.innerHTML = message;
+      });
+    });
+    sendBtn.addEventListener("click", function() {
+      ws.send(input.value);
+    });
+  </script>
+</html>
